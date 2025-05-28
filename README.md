@@ -1,59 +1,83 @@
-# air-quality-ml-framework
+# A Comprehensive Machine Learning Framework for Predicting and Analyzing Urban Air Quality in India
 
-A Comprehensive Machine Learning Framework for Predicting and Analyzing Urban Air Quality in India
-Author: Nadia Sharief
+**Author:** Nadia Sharief  
+**Degree:** Master of Science in Data Science  
+**Date of Completion:** March 25, 2025
 
-Institution: University of Arizona
+---
 
-Degree: Master of Science in Data Science
+## 📘 Introduction
 
-Date of Completion: March 25, 2025
+Air pollution is a major environmental health issue, with increasing evidence linking exposure to harmful pollutants such as nitrogen dioxide (NO₂) and particulate matter (PM) to severe health conditions like respiratory diseases, cardiovascular issues, and cancer. Urban regions with higher pollution levels tend to impact vulnerable populations more severely, compounding health disparities.
 
-Introduction:
-Air pollution is a major environmental health issue, with increasing evidence linking exposure to harmful pollutants such as nitrogen dioxide (NO₂) and particulate matter (PM) to severe health problems, including respiratory diseases, cardiovascular issues, and cancer. Urban areas, particularly those with high pollution levels, disproportionately affect vulnerable populations, exacerbating health disparities. Understanding how varying levels of air pollution influence public health is crucial, especially in communities facing environmental injustices.
+This research assesses the impact of air pollution on public health outcomes—particularly cancer incidence and survival—by predicting air quality levels using machine learning (ML). AQI (Air Quality Index) values are categorized into buckets such as "Good," "Moderate," and "Unhealthy" to explore their correlation with health risks.
 
-This research aims to assess the impact of air pollution on health outcomes, with a particular focus on cancer incidence and survival. Machine learning (ML) techniques are employed to predict air quality levels, categorized into AQI (Air Quality Index) buckets, which represent different health risk categories. By classifying AQI levels into categories such as "Good," "Moderate," and "Unhealthy," the study investigates how exposure to different pollution levels correlates with health risks.
+Multiple ML models are used for AQI prediction, including:
+- K-Nearest Neighbors (KNN)
+- Gaussian Naïve Bayes (GNB)
+- Support Vector Machine (SVM)
+- Random Forest (RF)
+- XGBoost
 
-The study utilizes a range of machine learning models, including K-Nearest Neighbors (KNN), Gaussian Naïve Bayes (GNB), Support Vector Machine (SVM), Random Forest (RF), and XGBoost, to predict AQI buckets based on environmental data from 2015 to 2020. To address class imbalance, the Synthetic Minority Over-sampling Technique (SMOTE) is applied to ensure robust model performance across all AQI categories. Various performance metrics, including accuracy, precision, recall, F1-score, and error metrics such as RMSE and MAE, are used to evaluate model effectiveness.
+To handle class imbalance in AQI categories, SMOTE (Synthetic Minority Over-sampling Technique) is applied. Evaluation metrics include accuracy, precision, recall, F1-score, RMSE, and MAE.
 
-By exploring the relationship between air pollution and health outcomes, this research aims to provide valuable insights for public health policy, particularly in regions where air pollution is a critical concern. The findings will assist policymakers and healthcare professionals in designing interventions to reduce exposure to harmful pollutants, especially in underserved communities.
+The study’s findings aim to support data-driven public health policies and inform interventions that reduce exposure to harmful pollutants—especially in underserved communities.
 
-Methodology Applied in this Project
-Data Preparation and Preprocessing
-Data Sources: Air quality data from CPCB and Kaggle (AQI, NO₂, PM for 2015-2020).
-Data Imputation: Compared mean, KNN, and iterative imputation methods. Chose KNN for its lower RMSE and ability to maintain non-negative data.
-Data Cleaning: Identified and corrected outliers and erroneous values affecting model performance.
-Mapping to AQI Categories: Categorized AQI values into Good, Moderate, Unhealthy, etc..
-Data Consistency: Verified data types and unique values to maintain consistency.
-Exploratory Data Analysis (EDA)
-Feature Exploration: Examined the influence of pollutants on AQI levels.
-Correlation Heatmap: Visualized relationships between pollutants and AQI.
-Trend Analysis: Analyzed annual and seasonal variations in AQI and pollutants, including trends for the six most polluted cities in India.
-Pollutant Contributions: Investigated city-wise AQI contributions and pollutant trends over time.
-Feature Transformation & Normalization:
-Assessed and addressed skewness in features.
-Applied log and Yeo-Johnson transformations for normalization.
-Used StandardScaler to normalize training and testing datasets.
-Class Imbalance Handling: Identified class imbalance, leading to the application of SMOTE.
-Geospatial Analysis (Within EDA):
-City-Level AQI Mapping:
+---
 
-Used geocoding to obtain latitude/longitude coordinates for cities.
-Plotted AQI bucket distributions on Folium maps, highlighting pollution hotspots.
-Spatial AQI Trends:
+## 🔧 Methodology Applied
 
-Visualized geographic variations in AQI levels.
-Analyzed regional disparities in pollution exposure.
-Mapped yearly and monhtly trends to observe AQI fluctuations.
-Model Development
-Class Distribution Analysis: Evaluated class distribution in training and testing sets for AQI prediction.
-Model Definition: Defined ML models (KNN, Naive Bayes, Random Forest, XGBoost, SVM) for AQI prediction.
-Model Evaluation:
-Without SMOTE: Assessed model performance on normalized data.
-With SMOTE: Applied SMOTE to address class imbalance, improving prediction for underrepresented AQI categories.
-Choropleth Map of Deaths from Outdoor Air Pollution by Country (2015–2020)
-Data Loading and Combining
+### 🧹 Data Preparation and Preprocessing
+- **Data Sources**: CPCB & Kaggle (AQI, NO₂, PM for 2015–2020)
+- **Imputation Techniques**: Compared mean, KNN, and iterative imputation; KNN was chosen for its lower RMSE and better data integrity.
+- **Data Cleaning**: Removed outliers and corrected erroneous values.
+- **AQI Categorization**: Mapped AQI values to health-related buckets (Good, Moderate, Unhealthy, etc.).
+- **Consistency Checks**: Verified data types and unique values for clean processing.
 
+### 📊 Exploratory Data Analysis (EDA)
+- **Feature Insights**: Assessed how pollutants affect AQI levels.
+- **Correlation Analysis**: Used heatmaps to visualize relationships.
+- **Temporal Trends**: Analyzed annual and seasonal patterns in AQI/pollutants.
+- **City-Level Analysis**: Focused on six most polluted Indian cities.
+
+### 🔁 Feature Transformation & Normalization
+- Addressed skewness using log and Yeo-Johnson transformations.
+- Standardized features using `StandardScaler`.
+
+### ⚖️ Handling Class Imbalance
+- Detected imbalanced AQI buckets.
+- Applied **SMOTE** to balance class distribution.
+
+---
+
+## 🌍 Geospatial Analysis (within EDA)
+
+### 🗺 City-Level AQI Mapping
+- Obtained geolocation coordinates via geocoding.
+- Used **Folium** to create interactive AQI heatmaps.
+
+### 📌 Spatial AQI Trends
+- Visualized regional disparities in pollution.
+- Tracked AQI fluctuations over time using yearly and monthly maps.
+
+---
+
+## 🤖 Model Development & Evaluation
+
+### ⚙️ Model Setup
+- Defined classification models: KNN, Naive Bayes, SVM, Random Forest, XGBoost.
+- Evaluated class distributions in train/test datasets.
+
+### 📈 Model Evaluation
+- **Without SMOTE**: Trained models on normalized datasets.
+- **With SMOTE**: Improved predictions for minority AQI classes.
+
+---
+
+## 🗺 Choropleth Map: Air Pollution Deaths (2015–2020)
+- Created a global choropleth map showing country-level mortality attributed to outdoor air pollution.
+  
+## Data Loading and Combining
 ```
 import pandas as pd
 
