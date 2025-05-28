@@ -77,7 +77,7 @@ The study’s findings aim to support data-driven public health policies and inf
 ## 🗺 Choropleth Map: Air Pollution Deaths (2015–2020)
 - Created a global choropleth map showing country-level mortality attributed to outdoor air pollution.
   
-## Data Loading and Combining
+### Data Loading and Combining
 ```
 import pandas as pd
 
@@ -95,4 +95,12 @@ print("First few rows of the combined dataset:")
 print(df_all.head())
 
 ```
+Combined dataset shape: (915, 4)
+First few rows of the combined dataset:
+  GeometryCode  Max of Year        First Location           First Tooltip
+0          AFG         2015           Afghanistan  20 688 [16 534-25 300]
+1          AGO         2015                Angola      8527 [2150-16 192]
+2          ALB         2015               Albania        2250 [1643-2862]
+3          ARE         2015  United Arab Emirates        1607 [1251-1962]
+4          ARG         2015             Argentina  18 729 [12 845-25 270]
 
