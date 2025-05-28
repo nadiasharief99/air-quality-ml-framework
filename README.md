@@ -95,6 +95,7 @@ print("First few rows of the combined dataset:")
 print(df_all.head())
 
 ```
+```
 Combined dataset shape: (915, 4)
 First few rows of the combined dataset:
   GeometryCode  Max of Year        First Location           First Tooltip
@@ -103,4 +104,4 @@ First few rows of the combined dataset:
 2          ALB         2015               Albania        2250 [1643-2862]
 3          ARE         2015  United Arab Emirates        1607 [1251-1962]
 4          ARG         2015             Argentina  18 729 [12 845-25 270]
-
+```
