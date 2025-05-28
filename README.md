@@ -105,3 +105,53 @@ First few rows of the combined dataset:
 3          ARE         2015  United Arab Emirates        1607 [1251-1962]
 4          ARG         2015             Argentina  18 729 [12 845-25 270]
 ```
+### Data Cleaning and Aggregation
+
+```
+import re
+
+# Defining a function to extract the death count 
+def extract_deaths(text):
+    """
+    Extracts the first numeric value from the input text.
+    For example, "20 688 [16 534-25 300]" becomes 20688.
+    """
+    # Remove spaces and then use regex to extract digits.
+    text_clean = text.replace(" ", "")
+    match = re.search(r'(\d+)', text_clean)
+    if match:
+        return int(match.group(1))
+    return None
+
+# Apply the function to create a new deaths column
+df_all['Deaths'] = df_all['First Tooltip'].astype(str).apply(extract_deaths)
+
+# Rename "First Location" to "Country" for clarity
+df_all.rename(columns={'First Location': 'Country'}, inplace=True)
+
+# Preview the data with the new 'Deaths' column
+print("Data with Deaths column:")
+print(df_all[['Country', 'Max of Year', 'First Tooltip', 'Deaths']].head())
+
+# Aggregate the total deaths by country (if multiple rows exist per country)
+country_deaths = df_all.groupby("Country", as_index=False)["Deaths"].sum()
+
+print("Aggregated deaths by country:")
+print(country_deaths.head())
+```
+```
+Data with Deaths column:
+                Country  Max of Year           First Tooltip  Deaths
+0           Afghanistan         2015  20 688 [16 534-25 300]   20688
+1                Angola         2015      8527 [2150-16 192]    8527
+2               Albania         2015        2250 [1643-2862]    2250
+3  United Arab Emirates         2015        1607 [1251-1962]    1607
+4             Argentina         2015  18 729 [12 845-25 270]   18729
+Aggregated deaths by country:
+               Country  Deaths
+0          Afghanistan  106671
+1              Albania   13457
+2              Algeria   81529
+3               Angola   42985
+4  Antigua and Barbuda     106
+```
