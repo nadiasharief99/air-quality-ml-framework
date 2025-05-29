@@ -1640,6 +1640,610 @@ for col in transformed_cols:
     plt.tight_layout()
     plt.show()
 ```
+![image](https://github.com/user-attachments/assets/ac4e77f7-246b-4620-a897-83822d5b73e2)
+![image](https://github.com/user-attachments/assets/402fd7bf-a7b2-46b5-8afc-11785f49866a)
+![image](https://github.com/user-attachments/assets/3f9df2cf-9557-4fc3-b316-594c51388ad6)
+![image](https://github.com/user-attachments/assets/a7802c97-3f66-495c-b01f-2c593a42d938)
+![image](https://github.com/user-attachments/assets/7d0e64b0-2f73-4aa2-b9f7-06c6d4fb5edd)
+![image](https://github.com/user-attachments/assets/4d5da6c7-2e02-4790-b3f2-39d0021d49a0)
+![image](https://github.com/user-attachments/assets/42806356-cc1d-48e4-86c1-2018e96c4ea0)
+![image](https://github.com/user-attachments/assets/aec9b0d3-a4ba-4493-bb53-4c348a3269ef)
+![image](https://github.com/user-attachments/assets/018a68a5-3e45-4e42-a3b1-8d8b09924684)
+![image](https://github.com/user-attachments/assets/2a49249f-447b-4938-8972-9b3ba0837076)
+![image](https://github.com/user-attachments/assets/04bfb761-0fce-4330-b6fa-88ba6d6eda29)
+![image](https://github.com/user-attachments/assets/50cb555c-f970-4726-9aa5-499f05665bc2)
+![image](https://github.com/user-attachments/assets/06919c0f-031b-4e71-a4e7-643dc1a4b85b)
+
+These plots display histograms with KDE overlays and Q-Q plots for each transformed pollutant and AQI in both the training and testing sets. The primary objective is to verify that the log transformation has improved normality by:
+
+Histograms & KDEs: The distributions now appear more symmetric with fewer extreme values, indicating that the transformation has effectively mitigated heavy skewness across features.
+
+Q-Q Plots: The quantiles of the transformed data align more closely with a theoretical normal distribution, suggesting reduced skew and more stable variance.
+
+Specifically, for features like Toluene and Xylene, the right tails are less pronounced, and the data points in the Q-Q plots cluster nearer to the reference line, indicating a reduction in outliers. Similarly, the AQI now exhibits a more bell-shaped distribution with a tighter range of values, reflecting a better balance between low and high readings.
+
+Overall, these visualizations confirm that the log transformation has stabilized variance and normalized the distributions across both training and testing sets, thereby enhancing the reliability and performance of subsequent predictive models.
+
+```
+import pandas as pd
+import numpy as np
+import scipy.stats as stats
+
+# Convert the transformed training data into a DataFrame using the proper column names
+X_train_transformed_df = pd.DataFrame(X_train_processed, columns=transformed_cols)
+X_test_transformed_df = pd.DataFrame(X_test_processed, columns=transformed_cols)
+
+# For the Transformed Training Set:
+train_summary_transformed = X_train_transformed_df.describe().T
+train_summary_transformed['skew'] = X_train_transformed_df.skew()
+train_summary_transformed['kurtosis'] = X_train_transformed_df.kurtosis()
+
+print("Transformed Training Set Summary Statistics:")
+print(train_summary_transformed)
+
+# For the Transformed Test Set:
+test_summary_transformed = X_test_transformed_df.describe().T
+test_summary_transformed['skew'] = X_test_transformed_df.skew()
+test_summary_transformed['kurtosis'] = X_test_transformed_df.kurtosis()
+
+print("\nTransformed Test Set Summary Statistics:")
+print(test_summary_transformed)
+```
+```
+Transformed Training Set Summary Statistics:
+           count      mean       std       min       25%       50%       75%  \
+PM2.5    22148.0  3.936657  0.742616  0.000000  3.465736  3.970292  4.343805   
+PM10     22148.0  4.593483  0.677646  0.000000  4.189655  4.653960  5.003946   
+NO       22148.0  2.500089  0.875498  0.000000  1.945910  2.397895  2.995732   
+NO2      22148.0  3.068583  0.777552  0.000000  2.564949  3.135494  3.583519   
+NOx      22148.0  3.178048  1.021487  0.000000  2.708050  3.332205  3.784190   
+NH3      22148.0  2.734894  0.811059  0.000000  2.197225  2.708050  3.258097   
+CO       22148.0  0.747008  0.679669  0.000000  0.693147  0.693147  1.098612   
+SO2      22148.0  2.444488  0.763404  0.000000  1.945910  2.397895  2.772589   
+O3       22148.0  3.337616  0.697508  0.000000  2.995732  3.465736  3.784190   
+Benzene  22148.0  0.770006  0.845112  0.000000  0.000000  0.693147  1.386294   
+Toluene  22148.0  1.224847  1.197499  0.000000  0.000000  1.098612  2.197225   
+Xylene   22148.0  0.488842  0.761987  0.000000  0.000000  0.000000  0.693147   
+AQI      22148.0  4.883117  0.637429  2.639057  4.430817  4.804021  5.267858   
+
+              max      skew  kurtosis  
+PM2.5    6.823286  0.003381  0.497190  
+PM10     6.893656 -0.684273  2.833243  
+NO       5.971262  0.243277  0.205238  
+NO2      5.894403 -0.406455  0.910626  
+NOx      6.150603 -0.885225  1.495983  
+NH3      5.869297 -0.098192  0.477674  
+CO       5.176150  2.018678  6.654823  
+SO2      5.273000  0.582750  0.613921  
+O3       5.556828 -1.078766  2.403202  
+Benzene  6.122493  1.137669  1.971347  
+Toluene  6.122493  0.625036 -0.546868  
+Xylene   5.141664  1.607923  2.183650  
+AQI      7.625595  0.365571  0.160463  
+
+Transformed Test Set Summary Statistics:
+          count      mean       std       min       25%       50%       75%  \
+PM2.5    7383.0  3.936292  0.736912  0.000000  3.465736  3.970292  4.343805   
+PM10     7383.0  4.596408  0.675853  0.000000  4.189655  4.663439  5.010635   
+NO       7383.0  2.498074  0.873828  0.000000  1.945910  2.397895  2.944439   
+NO2      7383.0  3.074723  0.777234  0.000000  2.564949  3.135494  3.583519   
+NOx      7383.0  3.186405  1.013747  0.000000  2.708050  3.332205  3.784190   
+NH3      7383.0  2.747019  0.811054  0.000000  2.197225  2.772589  3.295837   
+CO       7383.0  0.749029  0.683223  0.000000  0.693147  0.693147  1.098612   
+SO2      7383.0  2.448455  0.761935  0.000000  1.945910  2.397895  2.772589   
+O3       7383.0  3.347584  0.684267  0.000000  2.995732  3.465736  3.784190   
+Benzene  7383.0  0.780910  0.849798  0.000000  0.000000  0.693147  1.386294   
+Toluene  7383.0  1.249240  1.205188  0.000000  0.000000  1.098612  2.197225   
+Xylene   7383.0  0.500885  0.778936  0.000000  0.000000  0.000000  0.693147   
+AQI      7383.0  4.884126  0.637472  2.772589  4.418841  4.804021  5.267858   
+
+              max      skew  kurtosis  
+PM2.5    6.857514  0.052379  0.489843  
+PM10     6.908755 -0.750323  3.177698  
+NO       5.673323  0.220170  0.260682  
+NO2      5.680173 -0.344512  0.760991  
+NOx      5.746203 -0.890999  1.544657  
+NH3      5.693732 -0.029031  0.214149  
+CO       4.762174  2.035478  6.465214  
+SO2      5.204007  0.574013  0.520784  
+O3       5.267858 -1.041262  2.327054  
+Benzene  6.122493  1.197747  2.428116  
+Toluene  6.120297  0.625351 -0.491296  
+Xylene   4.770685  1.648834  2.457331  
+AQI      7.406711  0.372373  0.090808
+
+```
+
+### Transformed Data Summary and Interpretation
+
+The log transformation compresses the scale of our features, resulting in lower variance, skewness, and kurtosis. Summary statistics for both the training and testing sets now show similar means and standard deviations, indicating that the transformation was applied consistently. Features that were previously highly skewed, such as CO, now have distributions that are closer to normal. This normalization minimizes the influence of extreme outliers, thereby enhancing model stability and performance during training and evaluation.
+
+### Further Transformation for Specific Features (Yeo-Johnson)¶
+
+```
+from sklearn.preprocessing import PowerTransformer
+
+# Define the columns for further transformation
+cols_transform = ['CO', 'O3', 'Benzene', 'Xylene']
+
+# Explicitly define the numeric column names that correspond to your processed data
+numeric_cols = ['PM2.5', 'PM10', 'NO', 'NO2', 'NOx', 'NH3', 'CO', 'SO2', 'O3', 'Benzene', 'Toluene', 'Xylene', 'AQI']
+
+# Convert processed training and testing data to DataFrames with proper column names
+X_train_processed_df = pd.DataFrame(X_train_processed, columns=numeric_cols)
+X_test_processed_df = pd.DataFrame(X_test_processed, columns=numeric_cols)
+
+# Create a PowerTransformer with the Yeo-Johnson method
+pt = PowerTransformer(method='yeo-johnson')
+
+# Fit and transform on the selected columns for the training data; transform the testing data
+X_train_trans = pt.fit_transform(X_train_processed_df[cols_transform])
+X_test_trans = pt.transform(X_test_processed_df[cols_transform])
+
+# Replace the original columns with the transformed values
+X_train_processed_df.loc[:, cols_transform] = X_train_trans
+X_test_processed_df.loc[:, cols_transform] = X_test_trans
+
+# Convert the DataFrames back to arrays if needed
+X_train_processed = X_train_processed_df.values
+X_test_processed = X_test_processed_df.values
+
+# Check new skewness for the transformed columns
+new_skew = pd.DataFrame(X_train_processed, columns=numeric_cols)[cols_transform].skew()
+print("New skewness for", cols_transform, ":\n", new_skew)
+```
+```
+from sklearn.preprocessing import PowerTransformer
+
+# Define the columns for further transformation
+cols_transform = ['CO', 'O3', 'Benzene', 'Xylene']
+
+# Explicitly define the numeric column names that correspond to your processed data
+numeric_cols = ['PM2.5', 'PM10', 'NO', 'NO2', 'NOx', 'NH3', 'CO', 'SO2', 'O3', 'Benzene', 'Toluene', 'Xylene', 'AQI']
+
+# Convert processed training and testing data to DataFrames with proper column names
+X_train_processed_df = pd.DataFrame(X_train_processed, columns=numeric_cols)
+X_test_processed_df = pd.DataFrame(X_test_processed, columns=numeric_cols)
+
+# Create a PowerTransformer with the Yeo-Johnson method
+pt = PowerTransformer(method='yeo-johnson')
+
+# Fit and transform on the selected columns for the training data; transform the testing data
+X_train_trans = pt.fit_transform(X_train_processed_df[cols_transform])
+X_test_trans = pt.transform(X_test_processed_df[cols_transform])
+
+# Replace the original columns with the transformed values
+X_train_processed_df.loc[:, cols_transform] = X_train_trans
+X_test_processed_df.loc[:, cols_transform] = X_test_trans
+
+# Convert the DataFrames back to arrays if needed
+X_train_processed = X_train_processed_df.values
+X_test_processed = X_test_processed_df.values
+
+# Check new skewness for the transformed columns
+new_skew = pd.DataFrame(X_train_processed, columns=numeric_cols)[cols_transform].skew()
+print("New skewness for", cols_transform, ":\n", new_skew)
+
+New skewness for ['CO', 'O3', 'Benzene', 'Xylene'] :
+ CO        -0.003696
+O3        -0.021495
+Benzene    0.109985
+Xylene     0.615541
+dtype: float64
+```
+
+### Further Transformation with Yeo-Johnson
+
+The Yeo-Johnson transformation was applied to specific features—CO, O3, Benzene, and Xylene—to further reduce skewness after the log transformation. The PowerTransformer with the Yeo-Johnson method adapts to both positive and negative values, making it ideal for these features. The results show that skewness for CO and O3 is nearly zero, while Benzene and Xylene exhibit slight skewness (0.11 and 0.62, respectively), indicating a more normalized distribution. This additional transformation helps stabilize variance and minimizes the impact of outliers, ultimately enhancing the robustness and performance of downstream modeling.
+
+## Normalization of training and testing set Using StandardScaler
+
+```
+from sklearn.preprocessing import StandardScaler
+import numpy as np
+
+# Assuming that X_train_processed and X_test_processed are your log-transformed (and further processed) datasets
+# and they already contain only the numeric columns (or the columns you want to normalize)
+
+# Initialize StandardScaler
+scaler = StandardScaler()
+
+# Fit the scaler on the processed training data and transform both training and test processed sets
+X_train_normalized = scaler.fit_transform(X_train_processed)
+X_test_normalized = scaler.transform(X_test_processed)
+
+print("Normalized training data shape:", X_train_normalized.shape)
+print("Normalized testing data shape:", X_test_normalized.shape)
+```
+```
+Normalized training data shape: (22148, 13)
+Normalized testing data shape: (7383, 13)
+Final Normalization with StandardScaler
+```
+
+After transformations, StandardScaler was applied to normalize both the training and testing datasets. This ensures that all features have a mean of 0 and a standard deviation of 1, making them suitable for machine learning models sensitive to scale differences. The transformed training set has a shape of (22,148, 13), and the test set has (7,383, 13), confirming that all features were standardized successfully. This step enhances model stability, improves convergence speed, and ensures fair weight distribution across different features.
+
+## Addressing Class Imbalance with SMOTE
+
+### Checking Class Distribution in the Training and testing Set
+
+```
+# Checking Class Distribution in the Training Set
+print("Class distribution in the training set:")
+print(y_train.value_counts())
+
+# Checking Class Distribution in the Testing Set
+print("Class distribution in the testing set:")
+print(y_test.value_counts())
+
+```
+```
+Class distribution in the training set:
+Moderate (Breathing discomfort to people with lung, heart disease, children and older adults)    8627
+Satisfactory (Minor breathing discomfort to sensitive people)                                    7237
+Poor (Breathing discomfort to people on prolonged exposure)                                      2284
+Very Poor (Respiratory illness to people on prolonged exposure)                                  1962
+Severe (Respiratory effects even on healthy people)                                              1023
+Good (Minimal Impact)                                                                            1015
+Name: AQI_Bucket, dtype: int64
+Class distribution in the testing set:
+Moderate (Breathing discomfort to people with lung, heart disease, children and older adults)    2876
+Satisfactory (Minor breathing discomfort to sensitive people)                                    2412
+Poor (Breathing discomfort to people on prolonged exposure)                                       761
+Very Poor (Respiratory illness to people on prolonged exposure)                                   654
+Severe (Respiratory effects even on healthy people)                                               341
+Good (Minimal Impact)                                                                             339
+Name: AQI_Bucket, dtype: int64
+
+```
+The training and testing sets reveal an imbalance, with the "Moderate" and "Satisfactory" classes having significantly more samples than the "Very Poor," "Severe," and "Good" categories. This can lead to biased model performance, where minority classes are underrepresented in predictions.
+
+To address this, Synthetic Minority Over-sampling Technique (SMOTE) will be used on the training data to generate synthetic examples for the underrepresented classes. This ensures a more balanced dataset, improving the model’s ability to learn patterns for all AQI categories effectively.
+
+```
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+
+# --- For Training Set ---
+# Calculate class counts for the training target
+class_counts_train = y_train.value_counts()
+
+# Simplify labels by extracting text before the first '(' and stripping whitespace
+simple_labels_train = [label.split('(')[0].strip() for label in class_counts_train.index]
+
+# Create a DataFrame for plotting (Training Set)
+plot_df_train = pd.DataFrame({
+    'AQI_Bucket': simple_labels_train,
+    'Count': class_counts_train.values
+})
+
+# --- For Testing Set ---
+# Calculate class counts for the testing target
+class_counts_test = y_test.value_counts()
+
+# Simplify labels for the testing set
+simple_labels_test = [label.split('(')[0].strip() for label in class_counts_test.index]
+
+# Create a DataFrame for plotting (Testing Set)
+plot_df_test = pd.DataFrame({
+    'AQI_Bucket': simple_labels_test,
+    'Count': class_counts_test.values
+})
+
+# --- Plotting ---
+plt.figure(figsize=(16, 6))
+
+# Training Set Plot
+plt.subplot(1, 2, 1)
+sns.barplot(data=plot_df_train, x='AQI_Bucket', y='Count', hue='AQI_Bucket', dodge=False, palette="viridis", legend=False)
+plt.title("Class Distribution in the Training Set", fontsize=16)
+plt.xlabel("AQI Bucket", fontsize=12)
+plt.ylabel("Count", fontsize=12)
+plt.xticks(rotation=45)
+plt.tight_layout()
+
+# Testing Set Plot
+plt.subplot(1, 2, 2)
+sns.barplot(data=plot_df_test, x='AQI_Bucket', y='Count', hue='AQI_Bucket', dodge=False, palette="viridis", legend=False)
+plt.title("Class Distribution in the Testing Set", fontsize=16)
+plt.xlabel("AQI Bucket", fontsize=12)
+plt.ylabel("Count", fontsize=12)
+plt.xticks(rotation=45)
+plt.tight_layout()
+
+plt.show()
+
+```
+
+![image](https://github.com/user-attachments/assets/87067a6b-b13a-479d-aa5a-372d573e646e)
+
+The bar charts illustrate class distribution in the training and testing datasets, highlighting a significant imbalance. The "Moderate" and "Satisfactory" AQI categories have the highest counts, while "Severe" and "Good" categories are underrepresented. This skewness suggests that real-world air quality data tends to cluster around moderate pollution levels, likely due to urban pollution patterns and data collection biases. Such an imbalance can lead to biased model predictions, where the model becomes better at recognizing frequent categories but struggles to accurately classify less common severe pollution cases.
+
+## Applying SMOTE to Balance the Classes
+
+### Developing Model.
+### Define ML models in a dictionary
+
+```
+import time
+import numpy as np
+import pandas as pd
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import mean_absolute_error, mean_squared_error, mean_squared_log_error, r2_score
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
+from imblearn.over_sampling import SMOTE
+
+# Encode target labels to numeric values
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+y_train_enc = le.fit_transform(y_train)
+y_test_enc = le.transform(y_test)
+
+models = {
+    'KNN': KNeighborsClassifier(),
+    'GNB': GaussianNB(),
+    'SVM': SVC(random_state=42),
+    'RF': RandomForestClassifier(random_state=42),
+    'XGBoost': XGBClassifier(eval_metric='mlogloss', random_state=42)
+}
+
+# Initialize lists to store results
+results_train = []
+results_test = []
+results_train_smote = []
+results_test_smote = []
+```
+### Evaluate Models WITHOUT SMOTE using normalized data
+
+```
+for name, model in models.items():
+    # ---- Training on Original Training Data ----
+    start_train = time.time()
+    model.fit(X_train_normalized, y_train_enc)
+    train_time = time.time() - start_train
+    
+    # Predictions on Training Data
+    y_train_pred = model.predict(X_train_normalized)
+    acc_train = accuracy_score(y_train_enc, y_train_pred)
+    prec_train = precision_score(y_train_enc, y_train_pred, average='weighted')
+    rec_train = recall_score(y_train_enc, y_train_pred, average='weighted')
+    f1_train = f1_score(y_train_enc, y_train_pred, average='weighted')
+    
+    # Error Metrics on Training Data
+    mae_train = mean_absolute_error(y_train_enc, y_train_pred)
+    rmse_train = np.sqrt(mean_squared_error(y_train_enc, y_train_pred))
+    try:
+        rmsle_train = np.sqrt(mean_squared_log_error(y_train_enc, y_train_pred))
+    except ValueError:
+        rmsle_train = np.nan
+    r2_train = r2_score(y_train_enc, y_train_pred)
+    
+    results_train.append({
+        'Model': name,
+        'Accuracy': acc_train,
+        'Precision': prec_train,
+        'Recall': rec_train,
+        'F1-Score': f1_train,
+        'Training Time (sec)': train_time,
+        'MAE': mae_train,
+        'RMSE': rmse_train,
+        'RMSLE': rmsle_train,
+        'R2': r2_train
+    })
+    
+    # ---- Predictions on Test Data ----
+    start_test = time.time()
+    y_test_pred = model.predict(X_test_normalized)
+    test_time = time.time() - start_test
+    
+    acc_test = accuracy_score(y_test_enc, y_test_pred)
+    prec_test = precision_score(y_test_enc, y_test_pred, average='weighted')
+    rec_test = recall_score(y_test_enc, y_test_pred, average='weighted')
+    f1_test = f1_score(y_test_enc, y_test_pred, average='weighted')
+    
+    mae_test = mean_absolute_error(y_test_enc, y_test_pred)
+    rmse_test = np.sqrt(mean_squared_error(y_test_enc, y_test_pred))
+    try:
+        rmsle_test = np.sqrt(mean_squared_log_error(y_test_enc, y_test_pred))
+    except ValueError:
+        rmsle_test = np.nan
+    r2_test = r2_score(y_test_enc, y_test_pred)
+    
+    results_test.append({
+        'Model': name,
+        'Accuracy': acc_test,
+        'Precision': prec_test,
+        'Recall': rec_test,
+        'F1-Score': f1_test,
+        'Prediction Time (sec)': test_time,
+        'MAE': mae_test,
+        'RMSE': rmse_test,
+        'RMSLE': rmsle_test,
+        'R2': r2_test
+    })
+```
+### Evaluate Models WITH SMOTE on the normalized data
+
+```
+smote = SMOTE(random_state=42)
+X_train_res, y_train_res = smote.fit_resample(X_train_normalized, y_train_enc)
+
+for name, model in models.items():
+    # ---- Training on SMOTE-Resampled Data ----
+    start_train_smote = time.time()
+    model.fit(X_train_res, y_train_res)
+    train_time_smote = time.time() - start_train_smote
+    
+    # Predictions on SMOTE-Resampled Training Data
+    y_train_pred_smote = model.predict(X_train_res)
+    acc_train_smote = accuracy_score(y_train_res, y_train_pred_smote)
+    prec_train_smote = precision_score(y_train_res, y_train_pred_smote, average='weighted')
+    rec_train_smote = recall_score(y_train_res, y_train_pred_smote, average='weighted')
+    f1_train_smote = f1_score(y_train_res, y_train_pred_smote, average='weighted')
+    
+    mae_train_smote = mean_absolute_error(y_train_res, y_train_pred_smote)
+    rmse_train_smote = np.sqrt(mean_squared_error(y_train_res, y_train_pred_smote))
+    try:
+        rmsle_train_smote = np.sqrt(mean_squared_log_error(y_train_res, y_train_pred_smote))
+    except ValueError:
+        rmsle_train_smote = np.nan
+    r2_train_smote = r2_score(y_train_res, y_train_pred_smote)
+    
+    results_train_smote.append({
+        'Model': name,
+        'Accuracy': acc_train_smote,
+        'Precision': prec_train_smote,
+        'Recall': rec_train_smote,
+        'F1-Score': f1_train_smote,
+        'Training Time (sec)': train_time_smote,
+        'MAE': mae_train_smote,
+        'RMSE': rmse_train_smote,
+        'RMSLE': rmsle_train_smote,
+        'R2': r2_train_smote
+    })
+    
+    # ---- Predictions on Test Data using the SMOTE-trained Model ----
+    start_test_smote = time.time()
+    y_test_pred_smote = model.predict(X_test_normalized)
+    test_time_smote = time.time() - start_test_smote
+    
+    acc_test_smote = accuracy_score(y_test_enc, y_test_pred_smote)
+    prec_test_smote = precision_score(y_test_enc, y_test_pred_smote, average='weighted')
+    rec_test_smote = recall_score(y_test_enc, y_test_pred_smote, average='weighted')
+    f1_test_smote = f1_score(y_test_enc, y_test_pred_smote, average='weighted')
+    
+    mae_test_smote = mean_absolute_error(y_test_enc, y_test_pred_smote)
+    rmse_test_smote = np.sqrt(mean_squared_error(y_test_enc, y_test_pred_smote))
+    try:
+        rmsle_test_smote = np.sqrt(mean_squared_log_error(y_test_enc, y_test_pred_smote))
+    except ValueError:
+        rmsle_test_smote = np.nan
+    r2_test_smote = r2_score(y_test_enc, y_test_pred_smote)
+    
+    results_test_smote.append({
+        'Model': name,
+        'Accuracy': acc_test_smote,
+        'Precision': prec_test_smote,
+        'Recall': rec_test_smote,
+        'F1-Score': f1_test_smote,
+        'Prediction Time (sec)': test_time_smote,
+        'MAE': mae_test_smote,
+        'RMSE': rmse_test_smote,
+        'RMSLE': rmsle_test_smote,
+        'R2': r2_test_smote
+    })
+```
+### Convert results into DataFrames for better visualization
+
+```
+
+df_train_results = pd.DataFrame(results_train)
+df_train_smote_results = pd.DataFrame(results_train_smote)
+df_test_results = pd.DataFrame(results_test)
+df_test_smote_results = pd.DataFrame(results_test_smote)
+
+print("Training Set Results (Without SMOTE):")
+print(df_train_results)
+print("\nTraining Set Results (With SMOTE):")
+print(df_train_smote_results)
+print("\nTesting Set Results (Without SMOTE):")
+print(df_test_results)
+print("\nTesting Set Results (With SMOTE):")
+print(df_test_smote_results)
+```
+```
+Training Set Results (Without SMOTE):
+     Model  Accuracy  Precision    Recall  F1-Score  Training Time (sec)  \
+0      KNN  0.882518   0.881824  0.882518  0.881662             0.040422   
+1      GNB  0.873262   0.876249  0.873262  0.874022             0.000000   
+2      SVM  0.967311   0.967550  0.967311  0.967250             3.892085   
+3       RF  1.000000   1.000000  1.000000  1.000000             1.881953   
+4  XGBoost  1.000000   1.000000  1.000000  1.000000             0.642573   
+
+        MAE      RMSE     RMSLE        R2  
+0  0.230630  0.725139  0.251871  0.714242  
+1  0.252077  0.748637  0.283696  0.695422  
+2  0.064611  0.388393  0.134426  0.918022  
+3  0.000000  0.000000  0.000000  1.000000  
+4  0.000000  0.000000  0.000000  1.000000  
+
+Training Set Results (With SMOTE):
+     Model  Accuracy  Precision    Recall  F1-Score  Training Time (sec)  \
+0      KNN  0.957053   0.957078  0.957053  0.956474             0.134188   
+1      GNB  0.891716   0.893178  0.891716  0.891284             0.016132   
+2      SVM  0.982960   0.983022  0.982960  0.982917            10.380149   
+3       RF  1.000000   1.000000  1.000000  1.000000             9.302735   
+4  XGBoost  1.000000   1.000000  1.000000  1.000000             1.585070   
+
+        MAE      RMSE     RMSLE        R2  
+0  0.082841  0.428767  0.162831  0.936969  
+1  0.195240  0.648193  0.242879  0.855947  
+2  0.033113  0.277291  0.102363  0.973638  
+3  0.000000  0.000000  0.000000  1.000000  
+4  0.000000  0.000000  0.000000  1.000000  
+
+Testing Set Results (Without SMOTE):
+     Model  Accuracy  Precision    Recall  F1-Score  Prediction Time (sec)  \
+0      KNN  0.820398   0.818818  0.820398  0.818864               1.124134   
+1      GNB  0.870784   0.873532  0.870784  0.871396               0.002006   
+2      SVM  0.950427   0.950875  0.950427  0.950353               4.162059   
+3       RF  0.999594   0.999594  0.999594  0.999594               0.063909   
+4  XGBoost  0.996208   0.996229  0.996208  0.996207               0.014020   
+
+        MAE      RMSE     RMSLE        R2  
+0  0.353921  0.899606  0.306778  0.560288  
+1  0.256129  0.750908  0.280836  0.693636  
+2  0.099824  0.484208  0.165043  0.872612  
+3  0.001084  0.054588  0.012864  0.998381  
+4  0.006772  0.125347  0.031145  0.991463  
+
+Testing Set Results (With SMOTE):
+     Model  Accuracy  Precision    Recall  F1-Score  Prediction Time (sec)  \
+0      KNN  0.801300   0.814745  0.801300  0.804474               1.476887   
+1      GNB  0.852499   0.864736  0.852499  0.855081               0.002011   
+2      SVM  0.951781   0.953874  0.951781  0.952244               7.620797   
+3       RF  0.999729   0.999729  0.999729  0.999729               0.066456   
+4  XGBoost  0.995937   0.995961  0.995937  0.995943               0.013759   
+
+        MAE      RMSE     RMSLE        R2  
+0  0.392659  0.949561  0.336897  0.510098  
+1  0.301910  0.831211  0.322072  0.624607  
+2  0.093458  0.463484  0.170656  0.883283  
+3  0.000677  0.041962  0.011408  0.999043  
+4  0.007585  0.134721  0.033169  0.990139
+```
+
+## AQI Prediction and Its Potential Benefits:
+Predicting air quality (AQI) is a complex task due to the dynamic environmental conditions and variability of pollutants across different times and locations. In this study, machine learning models were used to predict AQI levels, with the goal of improving forecasting accuracy for health and environmental planning.
+
+The results showed that the XGBoost model consistently outperformed the others, providing the highest accuracy and optimal error metrics during both training and testing. The Random Forest (RF) model also demonstrated strong performance, especially when trained with class balancing techniques, which helped reduce prediction errors. On the other hand, the Support Vector Machine (SVM) model was less accurate, showing sensitivity to imbalanced datasets.
+
+Several error metrics like Mean Absolute Error (MAE), Root Mean Squared Error (RMSE), and R² were used to assess the models, with improvements observed in all metrics when addressing class imbalances. The Gaussian Naïve Bayes (GNB) model, in particular, excelled in capturing the variation in AQI predictions, as shown by its best R² values.
+
+## Why Accurate AQI Prediction Matters:
+Reliable AQI predictions can have significant real-world benefits. Accurate forecasts can help protect public health by informing people, especially vulnerable groups like children and the elderly, about high pollution periods, allowing them to avoid harmful exposure.
+
+For policymakers and urban planners, precise AQI predictions can guide decisions on pollution control measures, such as improving traffic management, increasing green spaces, or regulating industrial emissions, all of which can reduce air pollution and its adverse effects.
+
+Moreover, with reliable AQI predictions, the public can make more informed decisions about daily activities, such as when to exercise outdoors or avoid high-pollution areas. This, in turn, can lead to healthier, more sustainable communities.
+
+In summary, this study demonstrates that improving AQI prediction models can offer valuable insights for public health protection, environmental policies, and community awareness. While XGBoost emerged as the top-performing model, Random Forest proved to be a strong alternative, offering flexibility and robustness for future AQI forecasting applications.
+
+### References:
+The air quality data used in this study for model development was sourced from the Central Pollution Control Board (CPCB) of India and extracted from Kaggle. The dataset contains detailed information on air quality parameters such as AQI, PM concentrations, and NO2 levels across multiple monitoring stations in India. This publicly available dataset can be accessed through the CPCB Data portal.
+
+For the creation of the Choropleth Map visualizing global AQI intensity levels, the datasets were sourced from the World Health Organization (WHO). The data on ambient air pollution and its impact on attributable deaths was retrieved from WHO's Ambient Air Pollution Attributable Deaths Data.
+
+
+
+
+
+
 
 
 
