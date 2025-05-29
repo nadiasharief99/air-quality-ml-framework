@@ -2234,7 +2234,7 @@ Moreover, with reliable AQI predictions, the public can make more informed decis
 
 In summary, this study demonstrates that improving AQI prediction models can offer valuable insights for public health protection, environmental policies, and community awareness. While XGBoost emerged as the top-performing model, Random Forest proved to be a strong alternative, offering flexibility and robustness for future AQI forecasting applications.
 
-### References:
+#### References:
 The air quality data used in this study for model development was sourced from the Central Pollution Control Board (CPCB) of India and extracted from Kaggle. The dataset contains detailed information on air quality parameters such as AQI, PM concentrations, and NO2 levels across multiple monitoring stations in India. This publicly available dataset can be accessed through the CPCB Data portal.
 
 For the creation of the Choropleth Map visualizing global AQI intensity levels, the datasets were sourced from the World Health Organization (WHO). The data on ambient air pollution and its impact on attributable deaths was retrieved from WHO's Ambient Air Pollution Attributable Deaths Data.
