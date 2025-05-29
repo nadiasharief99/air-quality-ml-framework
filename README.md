@@ -155,3 +155,91 @@ Aggregated deaths by country:
 3               Angola   42985
 4  Antigua and Barbuda     106
 ```
+### Geocoding Countries
+
+```
+from geopy.geocoders import Nominatim
+import time
+import pandas as pd
+
+# Initialize the geolocator with an increased timeout (e.g., 10 seconds)
+geolocator = Nominatim(user_agent="deaths_map", timeout=10)
+country_locations = {}
+
+# Loop through unique countries in your DataFrame and obtain coordinates.
+for country in country_deaths['Country'].unique():
+    try:
+        location = geolocator.geocode(country)
+        if location:
+            country_locations[country] = (location.latitude, location.longitude)
+        else:
+            country_locations[country] = (None, None)
+    except Exception as e:
+        print(f"Error geocoding {country}: {e}")
+        country_locations[country] = (None, None)
+    time.sleep(1)  # Respect API rate limits
+
+# Add latitude and longitude columns to your DataFrame
+country_deaths['Latitude'] = country_deaths['Country'].apply(lambda x: country_locations[x][0])
+country_deaths['Longitude'] = country_deaths['Country'].apply(lambda x: country_locations[x][1])
+
+print("Country deaths with coordinates:")
+print(country_deaths.head())
+```
+
+```
+Country deaths with coordinates:
+               Country  Deaths   Latitude  Longitude
+0          Afghanistan  106671  33.768006  66.238514
+1              Albania   13457   5.758765 -73.915162
+2              Algeria   81529  28.000027   2.999983
+3               Angola   42985 -11.877577  17.569124
+4  Antigua and Barbuda     106  17.223472 -61.955461
+```
+### Creating the Choropleth Map
+
+```
+import folium
+import json
+
+# 1. Load your GeoJSON data (update the file path as needed)
+geojson_path = "C:\\Users\\nadia\\Downloads\\countries.geo.json"
+with open(geojson_path, "r", encoding="utf-8") as f:
+    geojson_data = json.load(f)
+
+# (Optional) Verify the properties of the first feature
+print("Properties of the first GeoJSON feature:")
+print(geojson_data['features'][0]['properties'])  # Expected output: {'name': 'Afghanistan'}
+
+# 2. Create a base Folium map centered on a global location
+m = folium.Map(location=[20, 0], zoom_start=2)
+
+folium.Choropleth(
+    geo_data=geojson_data,
+    name="Choropleth",
+    data=country_deaths,
+    columns=["Country", "Deaths"],  # Use "Country" instead of "GeometryCode"
+    key_on="feature.properties.name",  # Matches the 'name' property in your GeoJSON
+    fill_color="YlGnBu",
+    fill_opacity=0.7,
+    line_opacity=0.2,
+    legend_name="Deaths from Outdoor Air Pollution",
+).add_to(m)
+
+# 4. (Optional) Add a GeoJsonTooltip to display the country name on hover
+folium.GeoJson(
+    geojson_data,
+    name="Country Names",
+    style_function=lambda x: {"fillColor": "transparent", "color": "transparent", "fillOpacity": 0},
+    tooltip=folium.GeoJsonTooltip(
+        fields=["name"],
+        aliases=["Country:"],
+        localize=True
+    ),
+).add_to(m)
+
+# 5. Display the map (In Jupyter Notebook, the map object should render)
+m
+```
+![image](https://github.com/user-attachments/assets/a9f06c3b-386c-4569-b7c5-11ec582bd484)
+
